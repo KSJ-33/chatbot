@@ -1,7 +1,9 @@
 import streamlit as st
 from openai import OpenAI
 
-# 페이지 설정
+# =========================
+# PAGE CONFIG
+# =========================
 st.set_page_config(
     page_title="Cafe AI",
     page_icon="☕",
@@ -14,84 +16,110 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* 전체 */
+/* 전체 배경 */
 .stApp {
-    background: #0f1115;
-    color: #f5f5f5;
+    background: #0B0F19;
+    color: #F5F7FA;
 }
 
-/* 메인 폭 */
+/* 메인 레이아웃 */
 .block-container {
-    padding-top: 2rem;
     max-width: 1100px;
+    padding-top: 2rem;
 }
 
-/* 상단 헤더 */
+/* 헤더 */
 .hero {
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,0.05),
-            rgba(255,255,255,0.02)
-        );
-        
-    border: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(20px);
+    background: #121826;
 
-    padding: 2.5rem;
+    border: 1px solid rgba(255,255,255,0.06);
+
     border-radius: 30px;
+
+    padding: 2.8rem;
 
     margin-bottom: 2rem;
 }
 
 /* 타이틀 */
 .hero-title {
-    font-size: 3.4rem;
+    font-size: 3.6rem;
+
     font-weight: 800;
-    letter-spacing: -1px;
+
+    letter-spacing: -2px;
+
     color: white;
-    margin-bottom: 0.3rem;
+
+    margin-bottom: 0.4rem;
 }
 
-/* 서브 */
+/* 설명 */
 .hero-sub {
+    color: #9AA4B2;
+
     font-size: 1.05rem;
-    color: #b4bcd0;
-    line-height: 1.7;
+
+    line-height: 1.8;
 }
 
-/* 글래스 카드 */
-.glass-card {
-    background: rgba(255,255,255,0.04);
+/* 카드 영역 */
+.feature-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 1rem;
+
+    margin-top: 2rem;
+}
+
+/* 카드 */
+.feature-card {
+    background: #151C2C;
+
     border: 1px solid rgba(255,255,255,0.05);
 
-    padding: 1.2rem;
     border-radius: 22px;
 
-    backdrop-filter: blur(20px);
+    padding: 1.3rem;
+
+    transition: 0.2s ease;
 }
 
-/* 사이드바 */
-section[data-testid="stSidebar"] {
-    background: #12151b;
-    border-right: 1px solid rgba(255,255,255,0.05);
+.feature-card:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(124,92,255,0.35);
 }
 
-/* 사이드바 글씨 */
-section[data-testid="stSidebar"] * {
-    color: #e8ecf3;
+/* 카드 제목 */
+.feature-title {
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    margin-top: 0.8rem;
+
+    margin-bottom: 0.4rem;
+}
+
+/* 카드 설명 */
+.feature-desc {
+    color: #94A3B8;
+
+    line-height: 1.7;
+
+    font-size: 0.93rem;
 }
 
 /* 채팅 입력창 */
-.stChatInput {
-    margin-top: 1rem;
-}
-
 .stChatInput input {
-    background: rgba(255,255,255,0.06) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    background: #151C2C !important;
 
     color: white !important;
+
+    border: 1px solid rgba(255,255,255,0.06) !important;
 
     border-radius: 18px !important;
 
@@ -102,85 +130,56 @@ section[data-testid="stSidebar"] * {
 .user-msg {
     background: linear-gradient(
         135deg,
-        #5b8cff,
-        #7b61ff
+        #7C5CFF,
+        #5B8CFF
     );
-
-    padding: 1rem 1.2rem;
-    border-radius: 22px;
 
     color: white;
 
+    padding: 1rem 1.2rem;
+
+    border-radius: 20px;
+
     width: fit-content;
+
     margin-left: auto;
 
     max-width: 80%;
-
-    box-shadow:
-        0 10px 30px rgba(91,140,255,0.25);
 }
 
 /* AI CHAT */
 .ai-msg {
-    background: rgba(255,255,255,0.05);
+    background: #151C2C;
 
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.04);
+
+    color: #F5F7FA;
 
     padding: 1rem 1.2rem;
 
-    border-radius: 22px;
-
-    color: #f3f5f7;
+    border-radius: 20px;
 
     max-width: 85%;
 
     line-height: 1.8;
 }
 
-/* 추천 카드 */
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+/* 사이드바 */
+section[data-testid="stSidebar"] {
+    background: #0F1725;
 
-    margin-top: 1.2rem;
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
-.feature-card {
-    background: rgba(255,255,255,0.04);
-
-    border: 1px solid rgba(255,255,255,0.05);
-
-    padding: 1.2rem;
-
-    border-radius: 20px;
-
-    transition: 0.25s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-4px);
-
-    background: rgba(255,255,255,0.06);
-}
-
-.feature-title {
-    font-weight: 700;
-    margin-top: 0.5rem;
-    margin-bottom: 0.3rem;
-}
-
-.feature-desc {
-    color: #9ea7bb;
-    font-size: 0.92rem;
-    line-height: 1.6;
+section[data-testid="stSidebar"] * {
+    color: #E6EDF7;
 }
 
 /* 모바일 */
 @media (max-width: 768px) {
 
     .hero-title {
-        font-size: 2.4rem;
+        font-size: 2.5rem;
     }
 
     .feature-grid {
@@ -196,48 +195,56 @@ section[data-testid="stSidebar"] * {
 # =========================
 st.markdown("""
 <div class="hero">
+
     <div class="hero-title">
         Cafe AI
     </div>
 
     <div class="hero-sub">
-        스페셜티 커피 · 브랜딩 · 메뉴 기획 · 감성 카페 컨설팅<br>
+        스페셜티 커피 · 카페 브랜딩 · 메뉴 기획 · 감성 마케팅<br>
         트렌디한 카페 경험을 만드는 AI 바리스타
     </div>
 
     <div class="feature-grid">
 
         <div class="feature-card">
-            <div style="font-size:1.5rem;">☕</div>
+            <div style="font-size:1.6rem;">☕</div>
+
             <div class="feature-title">
                 원두 큐레이션
             </div>
+
             <div class="feature-desc">
-                취향 기반 원두 추천과 풍미 분석
+                취향 기반 원두 추천과 향미 분석
             </div>
         </div>
 
         <div class="feature-card">
-            <div style="font-size:1.5rem;">🎨</div>
+            <div style="font-size:1.6rem;">🎨</div>
+
             <div class="feature-title">
                 카페 브랜딩
             </div>
+
             <div class="feature-desc">
-                무드 · 공간 · 로고 · 브랜드 톤 제안
+                로고 · 무드 · 공간 컨셉 제안
             </div>
         </div>
 
         <div class="feature-card">
-            <div style="font-size:1.5rem;">📈</div>
+            <div style="font-size:1.6rem;">📈</div>
+
             <div class="feature-title">
                 SNS 마케팅
             </div>
+
             <div class="feature-desc">
                 인스타 감성 콘텐츠와 릴스 아이디어
             </div>
         </div>
 
     </div>
+
 </div>
 """, unsafe_allow_html=True)
 
@@ -249,25 +256,21 @@ with st.sidebar:
     st.markdown("## ☕ Dashboard")
 
     st.markdown("""
-<div class="glass-card">
+    ### Today's Coffee
 
-### Today's Mood
+    **Ethiopia Yirgacheffe**
 
-**Colombia Supremo**
+    Floral · Citrus · Tea-like
 
-Nutty · Chocolate · Smooth
+    ---
 
-<br>
+    ### 추천 질문
 
-### 추천 질문
-
-- 요즘 유행하는 카페 인테리어 알려줘
-- 시그니처 메뉴 추천해줘
-- 인스타 감성 브랜딩 해줘
-- 여름 시즌 음료 기획해줘
-
-</div>
-""", unsafe_allow_html=True)
+    - 요즘 유행하는 카페 인테리어 알려줘
+    - 시그니처 메뉴 추천해줘
+    - 인스타 감성 브랜딩 해줘
+    - 여름 시즌 음료 기획해줘
+    """)
 
 # =========================
 # API KEY
@@ -286,24 +289,29 @@ else:
 
     client = OpenAI(api_key=openai_api_key)
 
-    # 세션 상태
+    # =========================
+    # SESSION STATE
+    # =========================
     if "messages" not in st.session_state:
 
         st.session_state.messages = [
             {
                 "role": "assistant",
                 "content": """
-안녕하세요.
-저는 카페 전문 AI 바리스타입니다 ☕
+안녕하세요 ☕
 
-카페 브랜딩, 메뉴 기획,
-원두 추천, 공간 컨셉,
-SNS 감성 마케팅까지 도와드릴게요.
+저는 카페 전문 AI 바리스타입니다.
+
+원두 추천, 카페 브랜딩,
+메뉴 개발, 공간 컨셉,
+SNS 마케팅까지 도와드릴게요.
 """
             }
         ]
 
-    # 기존 메시지
+    # =========================
+    # MESSAGE RENDER
+    # =========================
     for message in st.session_state.messages:
 
         with st.chat_message(message["role"]):
@@ -330,16 +338,20 @@ SNS 감성 마케팅까지 도와드릴게요.
                     unsafe_allow_html=True
                 )
 
-    # 입력창
+    # =========================
+    # CHAT INPUT
+    # =========================
     if prompt := st.chat_input(
         "카페 브랜딩이나 메뉴 아이디어를 물어보세요..."
     ):
 
+        # 유저 메시지 저장
         st.session_state.messages.append({
             "role": "user",
             "content": prompt
         })
 
+        # 유저 메시지 출력
         with st.chat_message("user"):
 
             st.markdown(
@@ -351,7 +363,7 @@ SNS 감성 마케팅까지 도와드릴게요.
                 unsafe_allow_html=True
             )
 
-        # SYSTEM PROMPT
+        # 시스템 프롬프트
         system_prompt = """
 당신은 프리미엄 카페 브랜드 전문 AI입니다.
 
@@ -366,7 +378,7 @@ SNS 감성 마케팅까지 도와드릴게요.
 - 공간 디자인
 """
 
-        # GPT 호출
+        # GPT 응답 생성
         stream = client.chat.completions.create(
             model="gpt-3.5-turbo",
 
@@ -393,7 +405,7 @@ SNS 감성 마케팅까지 도와드릴게요.
 
             response = st.write_stream(stream)
 
-        # 저장
+        # 응답 저장
         st.session_state.messages.append({
             "role": "assistant",
             "content": response
